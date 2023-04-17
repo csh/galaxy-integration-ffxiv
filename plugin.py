@@ -42,8 +42,8 @@ class FinalFantasyXIVPlugin(Plugin):
                 self.update_local_game_status(LocalGame(game.game_id, game.local_game_state))
                 self._cached_game_statuses[game.game_id] = game.local_game_state
         else:
-            self.update_local_game_status(LocalGame("final_fantasy_xiv_shadowbringers", LocalGameState.None_))
-            self._cached_game_statuses["final_fantasy_xiv_shadowbringers"] = LocalGameState.None_
+            self.update_local_game_status(LocalGame("final_fantasy_xiv", LocalGameState.None_))
+            self._cached_game_statuses["final_fantasy_xiv"] = LocalGameState.None_
 
         await asyncio.sleep(self.SLEEP_CHECK_STATUS)
 
@@ -94,7 +94,7 @@ class FinalFantasyXIVPlugin(Plugin):
         if len(self._game_instances) == 0:
             return []
 
-        return [ LocalGame(game_id='final_fantasy_xiv_shadowbringers', local_game_state = LocalGameState.Installed)]
+        return [ LocalGame(game_id='final_fantasy_xiv', local_game_state = LocalGameState.Installed)]
 
     async def get_owned_games(self):
         dlcs = list()
@@ -105,7 +105,7 @@ class FinalFantasyXIVPlugin(Plugin):
             (install_folder is None) or
             (not os.path.exists(install_folder))
         ):
-            return [ Game(game_id = 'final_fantasy_xiv_shadowbringers', game_title = 'Final Fantasy XIV: A Realm Reborn', dlcs = dlcs, license_info = LicenseInfo(license_type = license_type)) ]
+            return [ Game(game_id = 'final_fantasy_xiv', game_title = 'Final Fantasy XIV: A Realm Reborn', dlcs = dlcs, license_info = LicenseInfo(license_type = license_type)) ]
 
         dlc_folder = install_folder + "\\game\\sqpack\\"
         dlclist = [ item for item in os.listdir(dlc_folder) if os.path.isdir(os.path.join(dlc_folder, item)) ] if os.path.exists(dlc_folder) else []
@@ -126,9 +126,13 @@ class FinalFantasyXIVPlugin(Plugin):
                 dlc_id = "Shadowbringers"
                 dlc_name = "Final Fantasy XIV: Shadowbringers"
 
+            if dlc == "ex4":
+                dlc_id = "Endwalker"
+                dlc_name = "Final Fantasy XIV: Endwalker"
+
             dlcs.append(Dlc(dlc_id = dlc_id, dlc_title = dlc_name, license_info = LicenseInfo(license_type = LicenseType.SinglePurchase)))
 
-        return [ Game(game_id = 'final_fantasy_xiv_shadowbringers', game_title = 'Final Fantasy XIV: A Realm Reborn', dlcs = dlcs, license_info = LicenseInfo(license_type = license_type)) ]
+        return [ Game(game_id = 'final_fantasy_xiv', game_title = 'Final Fantasy XIV: A Realm Reborn', dlcs = dlcs, license_info = LicenseInfo(license_type = license_type)) ]
 
     async def get_game_times(self):
         pass
@@ -146,7 +150,7 @@ class FinalFantasyXIVPlugin(Plugin):
         return friends
 
     async def launch_game(self, game_id):
-        if game_id != 'final_fantasy_xiv_shadowbringers':
+        if game_id != 'final_fantasy_xiv':
             return
 
         self._game_instances[0].run_game()
@@ -183,7 +187,8 @@ class FinalFantasyXIVPlugin(Plugin):
             "ffxivlauncher64.exe",
             "ffxiv.exe",
             "ffxiv_dx11.exe",
-            "ffxivlauncher.exe"
+            "ffxivlauncher.exe",
+            "xivlauncher.exe"
         ]
 
         running = False

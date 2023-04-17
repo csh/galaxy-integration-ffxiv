@@ -24,6 +24,13 @@ class FFXIVLocalGame(object):
 def get_game_instances() -> List[FFXIVLocalGame]:
     result = list()
     install_folder = ffxiv_tools.get_installation_folder()
+    xivlauncher_folder = ffxiv_tools.get_xivlauncher_folder()
+    
+    if (
+        (xivlauncher_folder is not None) and 
+        (os.path.exists(xivlauncher_folder))
+    ):
+        result.append(FFXIVLocalGame(xivlauncher_folder, "XIVLauncher.exe"))
 
     if (
         (install_folder is None) or
